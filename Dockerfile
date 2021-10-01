@@ -1,5 +1,5 @@
 # docker build . -t wicebing/env-ehrs
-# sudo docker run -d -p 21111:22 -p 21112:8888 -v /home/bixea6000/ehrs:/root/data --name my_ehrs wicebing/env-ehrs
+# sudo docker run --gpus all -d -p 21111:22 -p 21112:8888 -v /home/bixa6000/ehrs:/root/data --name my_ehrs wicebing/env-ehrs:gpus
 # sudo docker exec my_server cat /etc/hosts
 
 # sudo rm -rf  /root/.ssh/known_hosts 
@@ -8,11 +8,18 @@
 # ssh root@172.17.0.2
 # jupyter lab  --port=8888 --allow-root --ip=0.0.0.0
 
+# remember to install the nvidia docker from the link [ref] 
+# https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
 
-FROM ubuntu:20.04
+FROM nvidia/cuda:11.4.2-devel-ubuntu20.04
+#FROM ubuntu:20.04
 #FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-devel
+
+#ENV DEBIAN_FRONTEND=noninteractive 
+ARG DEBIAN_FRONTEND=noninteractive
   
-RUN apt-get update \ 
+RUN apt-get update \
+    && apt-get install -y tzdata \ 
     && apt-get install -y openssh-server \
     && apt-get install -y wget \ 
     && apt-get install -y build-essential \
@@ -37,7 +44,7 @@ RUN wget \
 # -- install package --
 RUN conda update --all -y \ 
     && python -m pip install --upgrade pip
-RUN conda install pytorch torchvision torchaudio cudatoolkit=11.1 -c pytorch -c nvidia -y
+RUN conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch -y
 RUN python -m pip install transformers
 RUN conda install -c conda-forge jupyterlab -y \
     && conda install -c conda-forge implicit -y \
