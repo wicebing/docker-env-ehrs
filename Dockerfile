@@ -50,6 +50,7 @@ RUN conda install -c conda-forge jupyterlab -y \
     && conda install -c conda-forge implicit -y \
     && conda install bottleneck -y \
     && conda install jupyter -y \
+    && conda install matplotlib -y \ 
     && python -m pip install pandas requests tqdm seaborn tensorflow ipykernel keras lightgbm ipywidgets lxml numpy \
     && python -m pip install scikit-learn \
     && python -m pip install pyfolio xgboost
