@@ -24,6 +24,7 @@ RUN apt-get update \
     && apt-get install -y wget \ 
     && apt-get install -y build-essential \
     && apt-get install -y screen \
+    && apt-get install -y htop \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir /root/data
 
@@ -50,10 +51,14 @@ RUN conda install -c conda-forge jupyterlab -y \
     && conda install -c conda-forge implicit -y \
     && conda install bottleneck -y \
     && conda install jupyter -y \
-    && conda install matplotlib -y \ 
+    && conda install -c conda-forge pyreadstat -y \
+    && conda install -c conda-forge matplotlib -y \
     && python -m pip install pandas requests tqdm seaborn tensorflow ipykernel keras lightgbm ipywidgets lxml numpy \
+    && conda install -c conda-forge ipywidgets -y \
     && python -m pip install scikit-learn \
-    && python -m pip install pyfolio xgboost
+    && python -m pip install pyfolio xgboost \
+    && python -m pip install ycimpute
+    
     
 # -- install package --
 
