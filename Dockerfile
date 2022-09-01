@@ -58,7 +58,7 @@ RUN conda install -c conda-forge jupyterlab -y \
     && python -m pip install scikit-learn \
     && python -m pip install pyfolio xgboost \
     && python -m pip install ycimpute
-    
+RUN python -m pip install openpyxl
     
 # -- install package --
 
