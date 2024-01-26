@@ -11,7 +11,7 @@
 # remember to install the nvidia docker from the link [ref] 
 # https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html
 
-FROM nvidia/cuda:11.4.2-devel-ubuntu20.04
+FROM nvidia/cuda:12.1.0-devel-ubuntu20.04
 #FROM ubuntu:20.04
 #FROM pytorch/pytorch:1.9.0-cuda11.1-cudnn8-devel
 
@@ -33,10 +33,10 @@ ENV PATH="/root/miniconda3/bin:${PATH}"
 ARG PATH="/root/miniconda3/bin:${PATH}"
 
 RUN wget \
-    https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh \
+    https://repo.anaconda.com/miniconda/Miniconda3-py311_23.11.0-2-Linux-x86_64.sh \
     && mkdir /root/.conda \
-    && bash Miniconda3-py39_4.10.3-Linux-x86_64.sh -b \
-    && rm -f Miniconda3-py39_4.10.3-Linux-x86_64.sh \
+    && bash Miniconda3-py311_23.11.0-2-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-py311_23.11.0-2-Linux-x86_64.sh \
     && echo ". /root/miniconda3/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "conda activate" >> ~/.bashrc
 # -- install miniconda --
@@ -45,8 +45,9 @@ RUN wget \
 # -- install package --
 RUN conda update --all -y \ 
     && python -m pip install --upgrade pip
-RUN conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch -y
+RUN conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia -y
 RUN python -m pip install transformers
+RUN python -m pip install openpyxl
 RUN conda install -c conda-forge jupyterlab -y \
     && conda install -c conda-forge implicit -y \
     && conda install bottleneck -y \
@@ -58,14 +59,13 @@ RUN conda install -c conda-forge jupyterlab -y \
     && python -m pip install scikit-learn \
     && python -m pip install pyfolio xgboost \
     && python -m pip install ycimpute
-RUN python -m pip install openpyxl
-    
+
 # -- install package --
 
 
 # -- set ssh --
 RUN mkdir /var/run/sshd \ 
-    && echo 'root:bixe' | chpasswd
+    && echo 'root:yabilab' | chpasswd
 
 # SSH login fix. Otherwise user is kicked off after login
 RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd \
